@@ -1,0 +1,21 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Liste des Cartes
+{% endblock %}
+{% block PageTitle%}
+    Liste totale des Cartes
+{% endblock %}
+{% block body %}
+<div class="row">
+    {% for carte in cartes %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{carte.name}}</h5>
+                <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront ~ '.jpg' ) }}" alt="" width="250" height="auto">
+                <p class="card-text">prix: {{carte.prix}} DT</p>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Stock: {{carte.quantiteStock}}</h6>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
