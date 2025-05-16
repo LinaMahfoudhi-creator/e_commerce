@@ -14,18 +14,10 @@ class MyCustomTwigExtensions extends AbstractExtension
     }
     public function defaultImage(string $path): string
     {
-        // Use the correct relative path from the public directory
-        $relativePath = 'assets/cartes_postales/' . $path;
-        $absolutePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $relativePath;
-
-        // Log the path to ensure it's correct
-        error_log('Checking file: ' . $absolutePath);
-
-        // Check if the file exists on the server
-        if (!is_file($absolutePath)) {
-            return 'assets/cartes_postales/cat3.jpg'; // Fallback image
+        if (!is_file($path)) {
+            return 'default_image.jpg';
         }
 
-        return $relativePath; // Path returned for use in Twig
+        return $path;
     }
 }

@@ -109,4 +109,8 @@ class CartePostale
 
         return $this;
     }
+    public function getPays(): ?string
+    {
+        return $this->region ?->getPays()?->getName();
+    }
 }

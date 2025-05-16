@@ -15,7 +15,20 @@ class CartePostaleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, CartePostale::class);
     }
-
+    public function orderbypriceAsc()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.prix', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    public function orderbypriceDesc()
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.prix', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return CartePostale[] Returns an array of CartePostale objects
     //     */

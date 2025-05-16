@@ -11,11 +11,39 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">{{carte.name}}</h5>
-                <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront ~ '.jpg' ) }}" alt="" width="250" height="auto">
-                <p class="card-text">prix: {{carte.prix}} DT</p>
+                <img src="{{ asset('assets/cartes_postales/') ~ carte.imagefront ~ '.jpg'}}" alt="" width="250" height="200">
+                <p class="card-text">Prix: {{carte.prix}} DT</p>
+                <p class="card-text">Pays: {{carte.pays}}</p>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Stock: {{carte.quantiteStock}}</h6>
+                <a href="{{path('cards.detail',{id: carte.id})}}" class="card-link">
+                    détail
+                </a>
+                <a href="{{path('cards.edit',{id: carte.id})}}" class="card-link">
+                    modifier
+                <a href="{{path('cards.delete',{id: carte.id})}}" class="card-link">
+                    supprimer
+                </a>
             </div>
         </div>
     {% endfor %}
 </div>
+{% if isPaginated is defined and isPaginated%}
+    <div class="row">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if page==1 %}disabled {% endif %}">
+                    <a class="page-link" href="{{ path('cards.paginate', {page:page-1, nbre:nbre} ) }}">Previous</a>
+                </li>
+                {% for i in range(1,nbrePage) %}
+                    <li class="page-item {% if i == page %}active{% endif %}">
+                        <a class="page-link" href="{{ path('cards.paginate', {page:i, nbre:nbre} ) }}">{{i}}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {% if page==nbrePage %}disabled {% endif %}">
+                    <a class="page-link" href="{{ path('cards.paginate', {page:page+1, nbre:nbre} ) }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endif %}
 {% endblock %}

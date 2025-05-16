@@ -1,0 +1,28 @@
+{% extends 'template.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.prix) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(form.imagefront) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(form.imageback) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
