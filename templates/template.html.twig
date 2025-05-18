@@ -207,11 +207,18 @@
 
                     <!-- Nav Item - Alerts -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
+                    <a class="nav-link" href="{{ path('panier.voir') }}">
+                        {# <a class="nav-link dropdown-toggle" href="{{path('panier.voir')}}" id="alertsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> #}
+                        <i class="fas fa-shopping-cart fa-fw"></i>  
                             <!-- Counter - Alerts -->
-                            <span class="badge badge-danger badge-counter">3+</span>
+                            <span class="badge badge-danger badge-counter">
+                                {% set total_temp = 0 %}
+                                {% for quantity_temp in session.get('panier')|default({}) %}
+                                    {% set total_temp = total_temp + quantity_temp %}
+                                {% endfor %}
+                            {{ total_temp }}
+                            </span>
                         </a>
                         <!-- Dropdown - Alerts -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -264,6 +271,7 @@
                             <!-- Counter - Messages -->
                             <span class="badge badge-danger badge-counter">7</span>
                         </a>
+
                         <!-- Dropdown - Messages -->
                         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="messagesDropdown">
@@ -390,6 +398,7 @@
                         {% block body %}
                             Template content goes here.
                         {% endblock %}
+                        <div class="my-5"></div>
             </div>
             <!-- /.container-fluid -->
         </div>

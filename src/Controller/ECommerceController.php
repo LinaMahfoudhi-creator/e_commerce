@@ -20,17 +20,21 @@ final class ECommerceController extends AbstractController
         $this->addFlash('success', 'Welcome to the E-Commerce page!');
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartes,
+            
         ]);
     }
     #[Route('/{id<\d+>}', name: 'cards.detail')]
-    public function detail(CartePostale $carte = null): Response
+    public function detail(CartePostale $carte = null,Request $request): Response
     {
         if (!$carte) {
             $this->addFlash('error', 'Carte introuvable');
             return $this->redirectToRoute('cards.list');
         }
+        dump($request);
         return $this->render('Cartes/detail.html.twig', [
             'carte' => $carte, 'isPaginated' => false,
+            'session' => $request->getSession()
+
         ]);
     }
     #[Route('/paginated/{page?1}/{nbre?2}', name: 'cards.paginate')]

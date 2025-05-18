@@ -1,3 +1,40 @@
+# Symfony cache and logs
+/var/cache/
+/var/log/
+
+# Environment files
+/.env.local
+/.env.*.local
+
+# PHP built-in server logs
+.symfony/
+
+# Installed vendors (should be reinstalled with composer)
+!/vendor/
+vendor/
+
+# Composer lock file if you want reproducible builds
+# (usually you DO commit this, but some teams choose to ignore it)
+/composer.lock
+
+# Node.js dependencies
+/node_modules/
+
+# Frontend build artifacts
+/public/build/
+/public/bundles/
+/assets/**/.DS_Store
+
+# IDE/editor config files
+/.idea/
+/*.iml
+/.vscode/
+/*.swp
+*.swo
+
+# OS/system files
+.DS_Store
+Thumbs.db
 
 ###> symfony/framework-bundle ###
 #/.env.local
@@ -5,7 +42,7 @@
 #/.env.*.local
 #/config/secrets/prod/prod.decrypt.private.php
 #/public/bundles/
-#/var/
+# /var/
 #/vendor/
 ###< symfony/framework-bundle ###
 

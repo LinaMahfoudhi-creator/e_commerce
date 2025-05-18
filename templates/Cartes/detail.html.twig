@@ -1,15 +1,67 @@
 {% extends 'template.html.twig' %}
-{% block title %}Détail de la carte{% endblock %}
-{% block PageTitle%}
+
+{% block title %}{{ carte.name }} | Détail de la carte{% endblock %}
+
+{% block PageTitle %}
     Détail de la carte
 {% endblock %}
+
 {% block body %}
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">{{carte.name}}</h5>
-            <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront ~ '.jpg' ) }}" alt="" width="250" height="auto">
-            <p class="card-text">prix: {{carte.prix}} DT</p>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Stock: {{carte.quantiteStock}}</h6>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- Left: Original Card -->
+        <div class="col-md-4">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ carte.name }}</h5>
+                    <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront ~ '.jpg') }}" alt="{{ carte.name }}" class="img-fluid mb-3">
+                    <p class="card-text">Prix: {{ carte.prix }} DT</p>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                        Stock: {{ carte.quantiteStock }}
+                    </h6>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Details & Add to Cart -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {# <h3 class="card-title">Détails du produit</h3> #}
+                    <p class="card-text">Nom: <strong>{{ carte.name }}</strong></p>
+                    <p class="card-text">Prix unitaire: <strong>{{ carte.prix }} DT</strong></p>
+                    <p class="card-text">Stock disponible:
+                        {% if carte.quantiteStock > 0 %}
+                            <span class="text-success">{{ carte.quantiteStock }}</span>
+                        {% else %}
+                            <span class="text-danger">Rupture de stock</span>
+                        {% endif %}
+                    </p>
+
+                    {% if carte.quantiteStock > 0 %}
+                        <form action="{{ path('ajouter_au_panier', {id: carte.id}) }}" method="post">
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantité</label>
+                                <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="{{ carte.quantiteStock }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Ajouter au panier</button>
+                        </form>
+                        <p></p>
+                        <p class="card-text">
+                            En Panier:
+                            <strong>
+                                {{ session.get('panier')[carte.id] is defined ? session.get('panier')[carte.id] : 0 }}
+                            </strong>
+                        </p>
+                    {% else %}
+                        <button class="btn btn-secondary w-100" disabled>Indisponible</button>
+                    {% endif %}
+                    {% if session.get('panier')[carte.id] is defined and  session.get('panier')[carte.id] != 0 %}
+                        <a href="{{ path('panier.voir') }}" class="btn btn-success w-100 mt-2">Acheter Maintenant</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}
