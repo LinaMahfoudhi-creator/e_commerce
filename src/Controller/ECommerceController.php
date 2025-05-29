@@ -8,9 +8,12 @@ use App\Service\TriPays;
 use App\Service\TriRegion;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 #[Route('/ecommerce')]
 final class ECommerceController extends AbstractController
 {
@@ -71,7 +74,7 @@ final class ECommerceController extends AbstractController
         return $this->redirectToRoute('cards.list');
     }
     #[Route('/edit/{id?0}', name: 'cards.edit')]
-    public function addCarte(ManagerRegistry $doctrine, Request $request,CartePostale $carte=null): Response
+    public function addCarte(ManagerRegistry $doctrine, Request $request,CartePostale $carte=null,SluggerInterface $slugger): Response
     {
         $new=false;
         if(!$carte){
@@ -80,9 +83,10 @@ final class ECommerceController extends AbstractController
         }
 
         $form = $this->createForm(CartePostaleTypeForm::class, $carte);
+        $form->remove('imagefront');
+        $form->remove('imageback');
 
         $form->handleRequest($request);
-
 
         if($new){
             $message='Carte ajoutée avec succès';
@@ -92,10 +96,29 @@ final class ECommerceController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $image->move($this->getParameter('carte_directory'), $newFilename);
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $carte->setImagefront(substr($newFilename, 0, -4));
+            }
             $manager = $doctrine->getManager();
             $manager->persist($carte);
             $manager->flush();
             $this->addFlash('success', $message);
+
             return $this->redirectToRoute('cards.list');
         }
         return $this->render('Cartes/add.html.twig', [
