@@ -9,6 +9,12 @@
         <div class="col-6">
             {{ form_row(form.prix) }}
         </div>
+        <div class="col-6">
+            {{ form_row(form.region) }}
+        </div>
+        <div class="col-6">
+            <a href="{{ path('cards.addRegion') }}" class="btn btn-outline-secondary">Région manquante?</a>
+        </div>
     </div>
         {{ form_rest(form) }}
 

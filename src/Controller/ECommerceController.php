@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\CartePostale;
+use App\Entity\Region;
 use App\Form\CartePostaleTypeForm;
+use App\Form\RegionTypeForm;
 use App\Service\TriPays;
 use App\Service\TriRegion;
 use Doctrine\Persistence\ManagerRegistry;
@@ -177,6 +179,43 @@ final class ECommerceController extends AbstractController
         }
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartesParRegion,
+            'isPaginated' => false,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
+        ]);
+    }
+    #[Route('/addRegion', name: 'cards.addRegion')]
+    public function addRegion(ManagerRegistry $doctrine, Request $request): Response
+    {
+        $region=new region();
+        $form = $this->createForm(RegionTypeForm::class, $region);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager = $doctrine->getManager();
+            $manager->persist($region);
+            $manager->flush();
+            $this->addFlash('success', 'Région ajoutée avec succès');
+            return $this->redirectToRoute('cards.list');
+        }
+        return $this->render('Cartes/addRegion.html.twig', [
+            'form' => $form->createView(), 'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
+        ]);
+    }
+    #[Route('/search', name: 'cards.search',methods: ['GET', 'POST'])]
+    public function search(\Doctrine\Persistence\ManagerRegistry $doctrine, Request $request): Response
+    {
+        $searchTerm = $request->request->get('q');
+        if (!$searchTerm) {
+            $this->addFlash('error', 'Veuillez entrer un terme de recherche');
+            return $this->redirectToRoute('cards.list');
+        }
+        $repository = $doctrine->getRepository(CartePostale::class);
+        $cartes = $repository->findByname($searchTerm);
+        if (empty($cartes)) {
+            $this->addFlash('error', 'Aucune carte trouvée pour ce terme de recherche');
+            return $this->redirectToRoute('cards.list');
+        }
+        return $this->render('Cartes/index.html.twig', [
+            'cartes' => $cartes,
             'isPaginated' => false,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }

@@ -29,6 +29,14 @@ class CartePostaleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByname($name)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.name LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return CartePostale[] Returns an array of CartePostale objects
     //     */
