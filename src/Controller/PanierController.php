@@ -42,16 +42,6 @@ final class PanierController extends AbstractController
     return $this->redirectToRoute('cards.detail', ['id' => $id]);
 }
 
-
-
-
-
-
-
-
-
-
-
         // if (!$session->has('panier')) {
         //     $panierlocal[$id] = $quantity;
 

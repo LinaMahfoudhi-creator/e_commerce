@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\CartePostale;
 use App\Form\CartePostaleTypeForm;
+use App\Service\TriPays;
+use App\Service\TriRegion;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +15,13 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ECommerceController extends AbstractController
 {
     #[Route('/', name: 'cards.list')]
-    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine): Response
+    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine, TriPays $pays,TriRegion $regions): Response
     {
         $repository = $doctrine->getRepository(CartePostale::class);
         $cartes = $repository->findAll();
         $this->addFlash('success', 'Welcome to the E-Commerce page!');
         return $this->render('Cartes/index.html.twig', [
-            'cartes' => $cartes,
+            'cartes' => $cartes, 'pays'=>$pays->getPays(), 'regions'=>$regions->getPays(),
             
         ]);
     }
@@ -118,6 +120,38 @@ final class ECommerceController extends AbstractController
             'isPaginated' => false,
         ]);
     }
-
-
+    #[Route('/Pays/{id?0}', name: 'cards.pays')]
+    public function cardsByPays(\Doctrine\Persistence\ManagerRegistry $doctrine, $id,TriPays $pays,TriRegion $regions): Response
+    {
+        $repository = $doctrine->getRepository(CartePostale::class);
+        $cartes = $repository->findAll();
+        $cartesParPays = array_filter($cartes, function($carte) use ($id) {
+            return $carte->getPaysId() == $id;
+        });
+        if (empty($cartesParPays)) {
+            $this->addFlash('error', 'Aucune carte trouvée pour ce pays');
+            return $this->redirectToRoute('cards.list');
+        }
+        return $this->render('Cartes/index.html.twig', [
+            'cartes' => $cartesParPays,
+            'isPaginated' => false,'pays'=>$pays->getPays(), 'regions'=>$regions->getPays(),
+        ]);
+    }
+    #[Route('/Region/{id?0}', name: 'cards.region')]
+    public function cardsByRegion(\Doctrine\Persistence\ManagerRegistry $doctrine, $id,TriPays $pays,TriRegion $regions): Response
+    {
+        $repository = $doctrine->getRepository(CartePostale::class);
+        $cartes = $repository->findAll();
+        $cartesParRegion = array_filter($cartes, function($carte) use ($id) {
+            return $carte->getRegion()->getId() == $id;
+        });
+        if (empty($cartesParRegion)) {
+            $this->addFlash('error', 'Aucune carte trouvée pour cette région');
+            return $this->redirectToRoute('cards.list');
+        }
+        return $this->render('Cartes/index.html.twig', [
+            'cartes' => $cartesParRegion,
+            'isPaginated' => false,'pays'=>$pays->getPays(), 'regions'=>$regions->getPays(),
+        ]);
+    }
 }
