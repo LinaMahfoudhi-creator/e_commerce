@@ -16,10 +16,11 @@
                 <p class="card-text">Pays: {{carte.pays}}</p>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Stock: {{carte.quantiteStock}}</h6>
                 <a href="{{path('cards.detail',{id: carte.id})}}" class="card-link">
-                    détail
+                    Acheter
                 </a>
                 <a href="{{path('cards.edit',{id: carte.id})}}" class="card-link">
                     modifier
+                </a>
                 <a href="{{path('cards.delete',{id: carte.id})}}" class="card-link">
                     supprimer
                 </a>

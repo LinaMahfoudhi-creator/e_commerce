@@ -14,14 +14,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/ecommerce')]
 final class ECommerceController extends AbstractController
 {
+    public function __construct(private TriPays $pays, private TriRegion $regions)
+    {
+        // Constructor can be used for dependency injection if needed
+    }
     #[Route('/', name: 'cards.list')]
-    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine, TriPays $pays,TriRegion $regions): Response
+    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine): Response
     {
         $repository = $doctrine->getRepository(CartePostale::class);
         $cartes = $repository->findAll();
-        $this->addFlash('success', 'Welcome to the E-Commerce page!');
         return $this->render('Cartes/index.html.twig', [
-            'cartes' => $cartes, 'pays'=>$pays->getPays(), 'regions'=>$regions->getPays(),
+            'cartes' => $cartes, 'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
             
         ]);
     }
@@ -35,7 +38,7 @@ final class ECommerceController extends AbstractController
         dump($request);
         return $this->render('Cartes/detail.html.twig', [
             'carte' => $carte, 'isPaginated' => false,
-            'session' => $request->getSession()
+            'session' => $request->getSession(),'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
 
         ]);
     }
@@ -51,7 +54,7 @@ final class ECommerceController extends AbstractController
             'isPaginated' => true,
             'page' => $page,
             'nbrePage' => $nbrePage,
-            'nbre' => $nbre,
+            'nbre' => $nbre,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }
     #[Route('/delete/{id?0}', name: 'cards.delete')]
@@ -97,7 +100,7 @@ final class ECommerceController extends AbstractController
         }
         return $this->render('Cartes/add.html.twig', [
             'Carte' => $carte,
-            'form' => $form->createView(),
+            'form' => $form->createView(),'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }
         #[Route('/orderAsc', name: 'cards.orderAsc')]
@@ -107,7 +110,7 @@ final class ECommerceController extends AbstractController
         $cartes = $repository->orderbypriceAsc();
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartes,
-            'isPaginated' => false,
+            'isPaginated' => false,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }
     #[Route('/orderDesc', name: 'cards.orderDesc')]
@@ -117,11 +120,11 @@ final class ECommerceController extends AbstractController
         $cartes = $repository->orderbypriceDesc();
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartes,
-            'isPaginated' => false,
+            'isPaginated' => false,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }
     #[Route('/Pays/{id?0}', name: 'cards.pays')]
-    public function cardsByPays(\Doctrine\Persistence\ManagerRegistry $doctrine, $id,TriPays $pays,TriRegion $regions): Response
+    public function cardsByPays(\Doctrine\Persistence\ManagerRegistry $doctrine, $id,): Response
     {
         $repository = $doctrine->getRepository(CartePostale::class);
         $cartes = $repository->findAll();
@@ -134,11 +137,11 @@ final class ECommerceController extends AbstractController
         }
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartesParPays,
-            'isPaginated' => false,'pays'=>$pays->getPays(), 'regions'=>$regions->getPays(),
+            'isPaginated' => false,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }
     #[Route('/Region/{id?0}', name: 'cards.region')]
-    public function cardsByRegion(\Doctrine\Persistence\ManagerRegistry $doctrine, $id,TriPays $pays,TriRegion $regions): Response
+    public function cardsByRegion(\Doctrine\Persistence\ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(CartePostale::class);
         $cartes = $repository->findAll();
@@ -151,7 +154,7 @@ final class ECommerceController extends AbstractController
         }
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartesParRegion,
-            'isPaginated' => false,'pays'=>$pays->getPays(), 'regions'=>$regions->getPays(),
+            'isPaginated' => false,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
         ]);
     }
 }
