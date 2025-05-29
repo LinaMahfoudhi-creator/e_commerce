@@ -113,7 +113,7 @@ final class PanierController extends AbstractController
             $total = $carte->getPrix() * $quantity;
 
             if ($carte->getQuantiteStock() < $quantity) {
-                $this->addFlash('error', "Stock insuffisant pour la carte « {$carte->getName()} »");
+                $this->addFlash('error', "Stock insuffisant pour la carte !!« {$carte->getName()} »");
                 return $this->redirectToRoute('cards.detail', ['id' => $id]);
             }
 
