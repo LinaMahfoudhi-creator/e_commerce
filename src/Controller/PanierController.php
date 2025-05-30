@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Controller;
-
 use App\Service\TriPays;
 use App\Service\TriRegion;
+use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,10 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 #[Route('/panier')]
 final class PanierController extends AbstractController
 {
-    public function __construct(private TriPays $pays, private TriRegion $regions)
-    {
-        // Constructor can be used for dependency injection if needed
-    }
     #[Route('/{id}', name: 'ajouter_au_panier', methods: ['POST'])]
     public function ajouterAuPanier(int $id, Request $request, EntityManagerInterface $em): Response
 {
@@ -47,6 +43,16 @@ final class PanierController extends AbstractController
 
     return $this->redirectToRoute('cards.detail', ['id' => $id]);
 }
+
+
+
+
+
+
+
+
+
+
 
         // if (!$session->has('panier')) {
         //     $panierlocal[$id] = $quantity;
@@ -87,7 +93,7 @@ final class PanierController extends AbstractController
 
 
     #[Route('/acheter', name: 'panier.acheter')]
-     public function acheter(Request $request, EntityManagerInterface $em): Response
+     public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer): Response
     {
         $session = $request->getSession();
         $panier = $session->get('panier', []);
@@ -125,8 +131,6 @@ final class PanierController extends AbstractController
             'panier' => $panier,
             'totalGlobal' => $totalGlobal,
             'session' => $session,
-            'pays'=>$this->pays->getPays(),
-            'regions'=>$this->regions->getPays(),
         ]);
     }
 
@@ -168,8 +172,6 @@ final class PanierController extends AbstractController
             'session' => $session,
             'panier' => $panier,
             'totalGlobal' => $totalGlobal,
-            'pays'=>$this->pays->getPays(),
-            'regions'=>$this->regions->getPays(),
         ]);
     }
 }
