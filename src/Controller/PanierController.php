@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\MailerService;
+use App\Service\PdfService;
 use App\Service\TriPays;
 use App\Service\TriRegion;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -96,9 +97,41 @@ final class PanierController extends AbstractController
         return $this->redirectToRoute('cards.list');
     }
 
+    /*#[Route('/pdf', name: 'commmande.pdf')]
+    public function pdf(CartePostale $carte = null, PdfService $pdf, Request $request, EntityManagerInterface $em)
+    {
+        $session = $request->getSession();
+        $panier = $session->get('panier', []);
 
+
+        $cartes = $em->getRepository(CartePostale::class)->findBy([
+            'id' => array_keys($panier)
+        ]);
+
+        $totalGlobal = 0;
+
+        foreach ($cartes as $item) {
+            $id = $item->getId();
+            $quantity = $panier[$id];
+            $totalGlobal += $item->getPrix() * $quantity;
+        }
+
+        $htmlContent = $this->renderView('panier/pdf.html.twig', [
+            'cartes' => $cartes,
+            'panier' => $panier,
+            'totalGlobal' => $totalGlobal,
+        ]);
+
+
+
+        $pdf->showPdfFile($htmlContent);
+        return new Response($htmlContent, 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
+
+    }*/
     #[Route('/acheter', name: 'panier.acheter')]
-     public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer): Response
+     public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer,PdfService $pdf): Response
     {   $user = $this->getUser();
 
         if (!$user) {
@@ -148,7 +181,7 @@ final class PanierController extends AbstractController
         $em->flush();
         $session->remove('panier'); // Optionally clear the cart
 
-        $mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
+        //$mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
 
         return $this->render('panier/buy.html.twig', [
             'cartes' => $cartes,
