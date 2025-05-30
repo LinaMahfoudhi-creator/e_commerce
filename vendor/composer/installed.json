@@ -6168,7 +6168,7 @@
             },
             "time": "2024-09-28T08:24:38+00:00",
             "type": "symfony-mailer-bridge",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Mailer\\Bridge\\Google\\": ""
