@@ -4,6 +4,11 @@
 
 {% block body %}
 <form method="post">
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
+        <label class="form-check-label" for="remember_me">Remember Me</label>
+    </div>
+
     {% if error %}
         {% if error.messageKey == 'EMAIL_NOT_FOUND' %}
             <div class="alert alert-danger">
