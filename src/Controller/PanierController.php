@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -91,7 +92,7 @@ final class PanierController extends AbstractController
 
 
     #[Route('/acheter', name: 'panier.acheter')]
-     public function acheter(Request $request, EntityManagerInterface $em): Response
+     public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer): Response
     {
         $session = $request->getSession();
         $panier = $session->get('panier', []);
@@ -120,10 +121,24 @@ final class PanierController extends AbstractController
             $carte->setQuantiteStock($carte->getQuantiteStock() - $quantity);
             $totalGlobal += $total;
         }
+        $mailmessage = "
+    <h2>Merci pour votre commande ! 🎉</h2>
+    <p>Votre commande de ".$quantity." carte(s) de <strong>" . $carte->getName() . "</strong> a été <span style='color: green;'>validée avec succès</span>.</p>
+     <p>Montant total : <strong style='color: blue;'>$total DT</strong></p>
+    <p>Nous préparons vos articles avec soin et vous tiendrons informé dès qu'ils seront expédiés.</p>
+    <p>Merci de votre confiance et à très bientôt !</p>
+    <hr>
+    <p>— L'équipe de RT2 e_commerce</p>
+";
+        ;
+
+
+
+
 
         $em->flush();
         $session->remove('panier'); // Optionally clear the cart
-
+        $mailer->sendEmail(content: $mailmessage);
         return $this->render('panier/buy.html.twig', [
             'cartes' => $cartes,
             'panier' => $panier,
