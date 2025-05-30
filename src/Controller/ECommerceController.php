@@ -56,7 +56,14 @@ final class ECommerceController extends AbstractController
     }
     #[Route('/delete/{id?0}', name: 'cards.delete')]
     public function delete(\Doctrine\Persistence\ManagerRegistry $doctrine, CartePostale $carte = null): Response
-    {   $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    {   $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        if(in_array('ROLE_USER', $user->getRoles())){
+            $this->addFlash('error', "Vous n'avez pas le droit de supprimer une carte ");
+            return $this->redirectToRoute('cards.list');
+        }
         if (!$carte) {
             $this->addFlash('error', 'Carte introuvable');
             return $this->redirectToRoute('cards.list');
@@ -70,7 +77,14 @@ final class ECommerceController extends AbstractController
     #[Route('/edit/{id?0}', name: 'cards.edit')]
 
     public function addCarte(ManagerRegistry $doctrine, Request $request,CartePostale $carte=null): Response
-    {   $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    {   $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        if(in_array('ROLE_USER', $user->getRoles())){
+            $this->addFlash('error', "Vous n'avez pas le droit de modifier une carte ");
+            return $this->redirectToRoute('cards.list');
+        }
         $new=false;
         if(!$carte){
             $carte=new CartePostale();
