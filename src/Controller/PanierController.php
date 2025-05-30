@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\MailerService;
+use App\Service\PdfService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -90,7 +91,36 @@ final class PanierController extends AbstractController
         return $this->redirectToRoute('cards.list');
     }
 
+#[Route('/pdf/{id}', name: 'commmande.pdf')]
+public function pdf(CartePostale $carte = null, PdfService $pdf, Request $request, EntityManagerInterface $em)
+{
+    $session = $request->getSession();
+    $panier = $session->get('panier', []);
 
+
+    $cartes = $em->getRepository(CartePostale::class)->findBy([
+        'id' => array_keys($panier)
+    ]);
+
+    $totalGlobal = 0;
+
+    foreach ($cartes as $item) {
+        $id = $item->getId();
+        $quantity = $panier[$id];
+        $totalGlobal += $item->getPrix() * $quantity;
+    }
+
+    $htmlContent = $this->renderView('panier/pdf.html.twig', [
+        'carte' => $carte,
+        'panier' => $panier,
+        'totalGlobal' => $totalGlobal,
+    ]);
+
+
+
+$pdf->showPdfFile($htmlContent);
+
+}
     #[Route('/acheter', name: 'panier.acheter')]
      public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer): Response
     {
@@ -137,8 +167,9 @@ final class PanierController extends AbstractController
 
 
         $em->flush();
-        $session->remove('panier'); // Optionally clear the cart
         $mailer->sendEmail(content: $mailmessage);
+        $session->remove('panier'); // Optionally clear the cart
+
         return $this->render('panier/buy.html.twig', [
             'cartes' => $cartes,
             'panier' => $panier,

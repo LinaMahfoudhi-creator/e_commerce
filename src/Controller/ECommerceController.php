@@ -24,7 +24,7 @@ final class ECommerceController extends AbstractController
         ]);
     }
     #[Route('/{id<\d+>}', name: 'cards.detail')]
-    public function detail(CartePostale $carte = null,Request $request): Response
+    public function detail(CartePostale $carte=null ,Request $request): Response
     {
         if (!$carte) {
             $this->addFlash('error', 'Carte introuvable');
@@ -53,7 +53,7 @@ final class ECommerceController extends AbstractController
         ]);
     }
     #[Route('/delete/{id?0}', name: 'cards.delete')]
-    public function delete(\Doctrine\Persistence\ManagerRegistry $doctrine, CartePostale $carte = null): Response
+    public function delete(\Doctrine\Persistence\ManagerRegistry $doctrine, CartePostale $carte=null): Response
     {
         if (!$carte) {
             $this->addFlash('error', 'Carte introuvable');
