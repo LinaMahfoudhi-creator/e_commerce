@@ -92,7 +92,13 @@ final class PanierController extends AbstractController
 
     #[Route('/acheter', name: 'panier.acheter')]
      public function acheter(Request $request, EntityManagerInterface $em): Response
-    {
+    {   $user = $this->getUser();
+
+        if (!$user) {
+            $request->getSession()->set('_security.main.target_path', $request->getUri());
+
+            return $this->redirectToRoute('app_login');
+        }
         $session = $request->getSession();
         $panier = $session->get('panier', []);
 

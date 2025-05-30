@@ -1,0 +1,17 @@
+{% extends 'template.html.twig' %}
+{% block title %}Profile{% endblock %}
+{% block PageTitle %}information de profile{% endblock %}
+
+{% block body %}
+    <p><strong>Email:</strong> {{ app.user.email }}</p>
+    <p><strong>nom :</strong> {{ app.user.username }}</p>
+    <p><strong>Rôle:</strong>
+        {% if 'ROLE_USER' in app.user.roles %}
+            Simple User
+        {% else %}
+            Admin
+
+        {% endif %}
+    </p>
+    <a href="{{ path('panier.voir') }}" class="btn btn-primary">Voir le Panier</a>
+{% endblock %}
