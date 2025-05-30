@@ -6,7 +6,7 @@
     <p><strong>Email:</strong> {{ app.user.email }}</p>
     <p><strong>nom :</strong> {{ app.user.username }}</p>
     <p><strong>Rôle:</strong>
-        {% if 'ROLE_USER' in app.user.roles %}
+        {% if app.user.roles == 'ROLE_USER' %}
             Simple User
         {% else %}
             Admin

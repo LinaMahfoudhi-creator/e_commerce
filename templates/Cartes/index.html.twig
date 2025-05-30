@@ -18,11 +18,13 @@
                 <a href="{{path('cards.detail',{id: carte.id})}}" class="card-link">
                     détail
                 </a>
-                <a href="{{path('cards.edit',{id: carte.id})}}" class="card-link">
-                    modifier
-                <a href="{{path('cards.delete',{id: carte.id})}}" class="card-link">
-                    supprimer
-                </a>
+                {% if is_granted("ROLE_ADMIN") %}
+                    <a href="{{path('cards.edit',{id: carte.id})}}" class="card-link">
+                        modifier
+                    <a href="{{path('cards.delete',{id: carte.id})}}" class="card-link">
+                        supprimer
+                    </a>
+                {% endif%}
             </div>
         </div>
     {% endfor %}

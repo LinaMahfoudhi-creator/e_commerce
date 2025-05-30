@@ -114,9 +114,12 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Login Screens:</h6>
+                    {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                        <a class="collapse-item" href="{{ path('app_logout') }}">logout</a>
+                    {% else %}
                     <a class="collapse-item" href="{{ path('app_login') }}">Login</a>
                     <a class="collapse-item" href="{{ path('registration') }}">Register</a>
-                    <a class="collapse-item" href="{{ path('app_logout') }}">logout</a>
+                    {% endif %}
                     <div class="collapse-divider"></div>
                     <h6 class="collapse-header">Other Pages:</h6>
                     <a class="collapse-item" href="404.html">404 Page</a>
@@ -346,20 +349,28 @@
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
+                            {% if is_granted("ROLE_ADMIN") %}
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Settings
                             </a>
+                            {% endif %}
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Activity Log
                             </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ path('app_login') }}">
-                                Login
-                            </a>
+                            {% if is_granted("IS_AUTHENTICATED_FULLY") %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
+                            {% else %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('app_login') }}">
+                                    Login
+                                </a>
+                                <a class="dropdown-item" href="{{ path('registration') }}">
+                                    Register
+                                </a>
+                            {% endif %}
                         </div>
 
                     </li>
