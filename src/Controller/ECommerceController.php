@@ -64,7 +64,15 @@ final class ECommerceController extends AbstractController
     }
     #[Route('/delete/{id?0}', name: 'cards.delete')]
     public function delete(\Doctrine\Persistence\ManagerRegistry $doctrine, CartePostale $carte = null): Response
-    {   $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    {   $user = $this->getUser();
+        if (!$user) {
+        $this->addFlash('error', "Access denied");
+        return $this->redirectToRoute('cards.list');
+    }
+        if(!in_array('ROLE_ADMIN', $user->getRoles())){
+            $this->addFlash('error', "Access denied");
+            return $this->redirectToRoute('cards.list');
+        }
         if (!$carte) {
             $this->addFlash('error', 'Carte introuvable');
             return $this->redirectToRoute('cards.list');
@@ -77,7 +85,15 @@ final class ECommerceController extends AbstractController
     }
     #[Route('/edit/{id?0}', name: 'cards.edit')]
     public function addCarte(ManagerRegistry $doctrine, Request $request,CartePostale $carte=null,SluggerInterface $slugger): Response
-    {   $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    {  $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', "access denied");
+            return $this->redirectToRoute('cards.list');
+        }
+        if(!in_array('ROLE_ADMIN', $user->getRoles())){
+            $this->addFlash('error', "access denied");
+            return $this->redirectToRoute('cards.list');
+        }
         $new=false;
         if(!$carte){
             $carte=new CartePostale();

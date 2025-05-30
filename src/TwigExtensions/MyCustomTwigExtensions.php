@@ -12,9 +12,9 @@ class MyCustomTwigExtensions extends AbstractExtension
             new TwigFilter('defaultImage', [$this, 'defaultImage']),
         ];
     }
-    public function defaultImage(string $path): string
+    public function defaultImage($path): string
     {
-        if (!is_file($path)) {
+        if (!$path) {
             return 'default_image.jpg';
         }
 

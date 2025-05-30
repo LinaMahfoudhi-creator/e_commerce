@@ -3,7 +3,7 @@
 namespace App\Trait;
 
 use Doctrine\DBAL\Types\Types;
-
+use Doctrine\ORM\Mapping as ORM;
 trait TimeStampTrait
 {
     #[ORM\Column(nullable: true)]

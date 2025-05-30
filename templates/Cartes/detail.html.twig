@@ -14,7 +14,14 @@
             <div class="card" style="width: 100%;">
                 <div class="card-body">
                     <h5 class="card-title">{{ carte.name }}</h5>
+                    <div class="row">
+                        <div class="col-sm">
                     <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront ~ '.jpg') }}" alt="{{ carte.name }}" class="img-fluid mb-3">
+                        </div>
+                        <div class="col-sm">
+                    <img src="{{ asset('/assets/cartes_postales/') ~ carte.imageback | defaultImage }}" alt="{{ carte.name }}" class="img-fluid mb-3">
+                        </div>
+                    </div>
                     <p class="card-text">Prix: {{ carte.prix }} DT</p>
                     <h6 class="card-subtitle mb-2 text-body-secondary">
                         Stock: {{ carte.quantiteStock }}
