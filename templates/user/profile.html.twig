@@ -6,10 +6,10 @@
     <p><strong>Email:</strong> {{ app.user.email }}</p>
     <p><strong>nom :</strong> {{ app.user.username }}</p>
     <p><strong>Rôle:</strong>
-        {% if 'ROLE_USER' in app.user.roles %}
-            Simple User
-        {% else %}
+        {% if 'ROLE_ADMIN' in app.user.roles %}
             Admin
+        {% else %}
+            User
 
         {% endif %}
     </p>
