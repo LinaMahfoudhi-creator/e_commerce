@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Controller;
-use App\Service\TriPays;
-use App\Service\TriRegion;
+
 use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 #[Route('/panier')]
 final class PanierController extends AbstractController
 {
-    public function __construct(private TriPays $pays, private TriRegion $regions)
-    {
-        // Constructor can be used for dependency injection if needed
-    }
     #[Route('/{id}', name: 'ajouter_au_panier', methods: ['POST'])]
     public function ajouterAuPanier(int $id, Request $request, EntityManagerInterface $em): Response
 {
@@ -98,7 +93,13 @@ final class PanierController extends AbstractController
 
     #[Route('/acheter', name: 'panier.acheter')]
      public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer): Response
-    {
+    {   $user = $this->getUser();
+
+        if (!$user) {
+            $request->getSession()->set('_security.main.target_path', $request->getUri());
+
+            return $this->redirectToRoute('app_login');
+        }
         $session = $request->getSession();
         $panier = $session->get('panier', []);
 
@@ -126,26 +127,15 @@ final class PanierController extends AbstractController
             $carte->setQuantiteStock($carte->getQuantiteStock() - $quantity);
             $totalGlobal += $total;
         }
-        $mailmessage = "
-        <h2>Merci pour votre commande ! 🎉</h2>
-        <p>Votre commande de ".$quantity." carte(s) de <strong>" . $carte->getName() . "</strong> a été <span style='color: green;'>validée avec succès</span>.</p>
-        <p>Montant total : <strong style='color: blue;'>$total DT</strong></p>
-        <p>Nous préparons vos articles avec soin et vous tiendrons informé dès qu'ils seront expédiés.</p>
-        <p>Merci de votre confiance et à très bientôt !</p>
-        <hr>
-        <p>— L'équipe de RT2 e_commerce</p>
-";
-        ;
 
         $em->flush();
-        $session->remove('panier');// Optionally clear the cart
-        $mailer->sendEmail(content: $mailmessage);
+        $session->remove('panier'); // Optionally clear the cart
 
         return $this->render('panier/buy.html.twig', [
             'cartes' => $cartes,
             'panier' => $panier,
             'totalGlobal' => $totalGlobal,
-            'session' => $session,'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
+            'session' => $session,
         ]);
     }
 
@@ -186,7 +176,7 @@ final class PanierController extends AbstractController
             'cartes' => $cartes,
             'session' => $session,
             'panier' => $panier,
-            'totalGlobal' => $totalGlobal, 'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
+            'totalGlobal' => $totalGlobal,
         ]);
     }
 }
