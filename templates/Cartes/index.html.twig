@@ -15,15 +15,17 @@
                 <p class="card-text">Prix: {{carte.prix}} DT</p>
                 <p class="card-text">Pays: {{carte.pays}}</p>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Stock: {{carte.quantiteStock}}</h6>
-                <a href="{{path('cards.detail',{id: carte.id})}}" class="card-link">
+                <a href="{{path('cards.detail',{id: carte.id})}} " class="btn btn-light">
                     Acheter
                 </a>
+                {% if is_granted("ROLE_ADMIN") %}
                 <a href="{{path('cards.edit',{id: carte.id})}}" class="card-link">
-                    modifier
+                    <i class="fa-regular fa-pen-to-square"></i>
                 </a>
-                <a href="{{path('cards.delete',{id: carte.id})}}" class="card-link">
-                    supprimer
-                </a>
+                    <a href="{{path('cards.delete',{id: carte.id})}}" class="card-link">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    {% endif%}
             </div>
         </div>
     {% endfor %}

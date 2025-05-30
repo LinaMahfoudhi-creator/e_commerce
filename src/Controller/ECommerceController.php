@@ -64,7 +64,7 @@ final class ECommerceController extends AbstractController
     }
     #[Route('/delete/{id?0}', name: 'cards.delete')]
     public function delete(\Doctrine\Persistence\ManagerRegistry $doctrine, CartePostale $carte = null): Response
-    {
+    {   $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if (!$carte) {
             $this->addFlash('error', 'Carte introuvable');
             return $this->redirectToRoute('cards.list');
@@ -77,7 +77,7 @@ final class ECommerceController extends AbstractController
     }
     #[Route('/edit/{id?0}', name: 'cards.edit')]
     public function addCarte(ManagerRegistry $doctrine, Request $request,CartePostale $carte=null,SluggerInterface $slugger): Response
-    {
+    {   $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $new=false;
         if(!$carte){
             $carte=new CartePostale();
