@@ -24,12 +24,18 @@ final class ECommerceController extends AbstractController
         // Constructor can be used for dependency injection if needed
     }
     #[Route('/', name: 'cards.list')]
-    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine): Response
+    public function index(\Doctrine\Persistence\ManagerRegistry $doctrine,$page=1,$nbre=4): Response
     {
         $repository = $doctrine->getRepository(CartePostale::class);
-        $cartes = $repository->findAll();
+        $cartes = $repository->findBy([],[],$nbre,($page-1)*$nbre);
+        $nbCartes=$repository->count([]);
+        $nbrePage=ceil($nbCartes/$nbre);
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartes, 'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
+            'isPaginated' => true,
+            'page' => $page,
+            'nbrePage' => $nbrePage,
+            'nbre' => $nbre,
         ]);
     }
     #[Route('/{id<\d+>}', name: 'cards.detail')]
