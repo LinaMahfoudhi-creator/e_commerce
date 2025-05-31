@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '8f244af9257caf60d2740e8d2dcaec711ad684d9',
+        'reference' => '90df09231a1c9f3f9ce4693c6c16f61aa358f9cf',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8f244af9257caf60d2740e8d2dcaec711ad684d9',
+            'reference' => '90df09231a1c9f3f9ce4693c6c16f61aa358f9cf',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -628,6 +628,15 @@
             'install_path' => __DIR__ . '/../sebastian/version',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'sensiolabs/gotenberg-bundle' => array(
+            'pretty_version' => '0.4.0',
+            'version' => '0.4.0.0',
+            'reference' => '71f0aa9cf20a929b40806255c7044b931fe1cd10',
+            'type' => 'symfony-bundle',
+            'install_path' => __DIR__ . '/../sensiolabs/gotenberg-bundle',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'symfony/asset' => array(
             'pretty_version' => 'v7.2.0',

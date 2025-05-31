@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\CartePostale;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensiolabs\GotenbergBundle\GotenbergPdfInterface;
 
 
 #[Route('/panier')]
@@ -97,8 +98,8 @@ final class PanierController extends AbstractController
         return $this->redirectToRoute('cards.list');
     }
 
-    /*#[Route('/pdf', name: 'commmande.pdf')]
-    public function pdf(CartePostale $carte = null, PdfService $pdf, Request $request, EntityManagerInterface $em)
+    #[Route('/pdf', name: 'commmande.pdf')]
+    public function pdf(PdfService $pdf, Request $request, EntityManagerInterface $em)
     {
         $session = $request->getSession();
         $panier = $session->get('panier', []);
@@ -124,12 +125,9 @@ final class PanierController extends AbstractController
 
 
 
-        $pdf->showPdfFile($htmlContent);
-        return new Response($htmlContent, 200, [
-            'Content-Type' => 'application/pdf',
-        ]);
+        return $pdf->showPdfFile($htmlContent);
 
-    }*/
+    }
     #[Route('/acheter', name: 'panier.acheter')]
      public function acheter(Request $request, EntityManagerInterface $em,MailerService $mailer,PdfService $pdf): Response
     {   $user = $this->getUser();
@@ -179,7 +177,7 @@ final class PanierController extends AbstractController
         ;
 
         $em->flush();
-        $session->remove('panier'); // Optionally clear the cart
+        //$session->remove('panier'); // Optionally clear the cart
 
         //$mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
 

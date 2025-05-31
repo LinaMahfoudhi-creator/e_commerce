@@ -11,7 +11,7 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">{{carte.name}}</h5>
-                <img src="{{ asset('assets/cartes_postales/') ~ carte.imagefront ~ '.jpg'}}" alt="" width="250" height="200">
+                <img src="{{ asset('assets/cartes_postales/') ~ carte.imagefront}}" alt="" width="250" height="200">
                 <p class="card-text">Prix: {{carte.prix}} DT</p>
                 <p class="card-text">Pays: {{carte.pays}}</p>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Stock: {{carte.quantiteStock}}</h6>

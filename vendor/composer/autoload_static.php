@@ -119,6 +119,7 @@ class ComposerStaticInit74ab73114a599f4a2997b6a284f9e273
             'Symfony\\Bridge\\Monolog\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'Svg\\' => 4,
+            'Sensiolabs\\GotenbergBundle\\' => 27,
             'Sabberworm\\CSS\\' => 15,
         ),
         'P' => 
@@ -496,6 +497,10 @@ class ComposerStaticInit74ab73114a599f4a2997b6a284f9e273
         'Svg\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
+        ),
+        'Sensiolabs\\GotenbergBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sensiolabs/gotenberg-bundle/src',
         ),
         'Sabberworm\\CSS\\' => 
         array (

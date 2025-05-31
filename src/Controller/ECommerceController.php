@@ -30,7 +30,6 @@ final class ECommerceController extends AbstractController
         $cartes = $repository->findAll();
         return $this->render('Cartes/index.html.twig', [
             'cartes' => $cartes, 'pays'=>$this->pays->getPays(), 'regions'=>$this->regions->getPays(),
-            
         ]);
     }
     #[Route('/{id<\d+>}', name: 'cards.detail')]

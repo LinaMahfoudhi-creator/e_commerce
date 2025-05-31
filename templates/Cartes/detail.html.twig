@@ -16,7 +16,7 @@
                     <h5 class="card-title">{{ carte.name }}</h5>
                     <div class="row">
                         <div class="col-sm">
-                    <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront ~ '.jpg') }}" alt="{{ carte.name }}" class="img-fluid mb-3">
+                    <img src="{{ asset('/assets/cartes_postales/' ~ carte.imagefront) }}" alt="{{ carte.name }}" class="img-fluid mb-3">
                         </div>
                         <div class="col-sm">
                     <img src="{{ asset('/assets/cartes_postales/') ~ carte.imageback | defaultImage }}" alt="{{ carte.name }}" class="img-fluid mb-3">
