@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationForm;
 use App\Security\LoginAuthenticator;
+use App\Service\MailerService;
 use App\Service\TriPays;
 use App\Service\TriRegion;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +23,7 @@ class RegistrationController extends AbstractController
         // Constructor can be used for dependency injection if needed
     }
     #[Route('/', name: 'registration')]
-    public function index(UserRepository $userRepository,Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher,Security $security)
+    public function index(UserRepository $userRepository,Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher,Security $security,MailerService $mailer)
     {
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
@@ -44,8 +45,23 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
             $this->addFlash('success', $user->getUsername().' registered successfully!');
-
+            $mailmessage = "
+                <html>
+        <body>
+            <h2>Bonjour " . htmlspecialchars($user->getUsername()) . ",</h2>
+            <p>Votre compte a bien été créé avec succès !</p>
+            <p>Vous pouvez désormais vous connecter avec votre adresse email : <strong>" . htmlspecialchars($user->getEmail()) . "</strong></p>
+            <p>Merci de votre confiance.</p>
+            <br>
+            <p>Cordialement,<br>L'équipe de [Nom de ton site]</p>
+        </body>
+    </html>
+";
+            $mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
             return $security->login($user, LoginAuthenticator::class, 'main');
+
+
+
         }
 
         return $this->render('registration/index.html.twig', [
