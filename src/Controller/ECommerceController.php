@@ -135,7 +135,7 @@ final class ECommerceController extends AbstractController
 
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
-                $carte->setImagefront(substr($newFilename, 0, -4));
+                $carte->setImagefront($newFilename);
             }
             $manager = $doctrine->getManager();
             $manager->persist($carte);
