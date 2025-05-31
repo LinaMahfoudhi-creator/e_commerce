@@ -88,38 +88,25 @@ final class PanierController extends AbstractController
     public function clear_session(Request $request): Response
     {
         $session = $request->getSession();
-        $session->clear(); // removes all session data
-
-        // $session->remove('panier'); // removes the 'panier' key from the session
-        // $session->invalidate(); // invalidates the session
-        // $session->migrate(); // regenerates the session id
-        // $session->clear(); // removes all session data
+        $session->remove('panier');
         $this->addFlash('success', 'Panier cleared !');
         return $this->redirectToRoute('cards.list');
     }
 
-    #[Route('/pdf', name: 'commmande.pdf')]
-    public function pdf(PdfService $pdf, Request $request, EntityManagerInterface $em)
+    #[Route('/pdf/{cartes}/{panier}/{totalGlobal}', name: 'commmande.pdf')]
+    public function pdf(PdfService $pdf,EntityManagerInterface $em,string $cartes,
+                        string $panier,
+                        float $totalGlobal,)
     {
-        $session = $request->getSession();
-        $panier = $session->get('panier', []);
-
-
-        $cartes = $em->getRepository(CartePostale::class)->findBy([
-            'id' => array_keys($panier)
+        $cartesIds = json_decode($cartes, true);
+        $panierDecoded = json_decode($panier, true);
+        $cartesEntities = $em->getRepository(CartePostale::class)->findBy([
+            'id' => $cartesIds
         ]);
 
-        $totalGlobal = 0;
-
-        foreach ($cartes as $item) {
-            $id = $item->getId();
-            $quantity = $panier[$id];
-            $totalGlobal += $item->getPrix() * $quantity;
-        }
-
         $htmlContent = $this->renderView('panier/pdf.html.twig', [
-            'cartes' => $cartes,
-            'panier' => $panier,
+            'cartes' => $cartesEntities,
+            'panier' => $panierDecoded,
             'totalGlobal' => $totalGlobal,
         ]);
 
@@ -177,9 +164,9 @@ final class PanierController extends AbstractController
         ;
 
         $em->flush();
-        //$session->remove('panier'); // Optionally clear the cart
+        $session->remove('panier'); // Optionally clear the cart
 
-        //$mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
+        $mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
 
         return $this->render('panier/buy.html.twig', [
             'cartes' => $cartes,

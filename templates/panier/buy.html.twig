@@ -38,11 +38,14 @@
         Merci pour votre achat !
     </div>
     <div>
-        <a
-           class="btn btn-primary"
-           href="{{ path('commmande.pdf') }}"
+        <a href="{{ path('commmande.pdf',{
+            'cartes': cartes|map(c => c.id)|json_encode,
+            'panier': panier|json_encode,
+            'totalGlobal': totalGlobal
+        }) }}"
            role="button"
-        >Votre commande en PDF</a>
+           class="btn btn-secondary">
+        Votre commande en PDF</a>
     </div>
 <div class="my-5 text-center">
     <p>Acheter plus ici !</p>

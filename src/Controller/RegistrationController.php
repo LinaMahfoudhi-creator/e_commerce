@@ -53,11 +53,11 @@ class RegistrationController extends AbstractController
             <p>Vous pouvez désormais vous connecter avec votre adresse email : <strong>" . htmlspecialchars($user->getEmail()) . "</strong></p>
             <p>Merci de votre confiance.</p>
             <br>
-            <p>Cordialement,<br>L'équipe de [Nom de ton site]</p>
+            <p>Cordialement,<br>L'équipe de RT2</p>
         </body>
     </html>
 ";
-            $mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,);
+            $mailer->sendEmail(to: $user->getEmail(),content: $mailmessage,subject: 'Création de compte');
             return $security->login($user, LoginAuthenticator::class, 'main');
 
 
